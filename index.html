@@ -1,0 +1,729 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>GePetrus Auto Center</title>
+    <style>
+      :root {
+        --bg: #050505;
+        --bg-soft: rgba(255, 255, 255, 0.03);
+        --bg-card: rgba(255, 255, 255, 0.04);
+        --border: rgba(255, 255, 255, 0.1);
+        --text: #ffffff;
+        --muted: rgba(255, 255, 255, 0.72);
+        --muted-2: rgba(255, 255, 255, 0.58);
+        --yellow: #facc15;
+        --yellow-dark: #d4a90d;
+        --shadow: 0 15px 35px rgba(250, 204, 21, 0.18);
+        --radius-xl: 28px;
+        --radius-lg: 22px;
+        --radius-md: 18px;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html {
+        scroll-behavior: smooth;
+      }
+
+      body {
+        margin: 0;
+        font-family: Arial, Helvetica, sans-serif;
+        background:
+          radial-gradient(circle at top right, rgba(250, 204, 21, 0.1), transparent 22%),
+          linear-gradient(to bottom, #050505, #090909, #050505);
+        color: var(--text);
+      }
+
+      a {
+        color: inherit;
+        text-decoration: none;
+      }
+
+      button {
+        font: inherit;
+        cursor: pointer;
+      }
+
+      .container {
+        width: min(1200px, calc(100% - 32px));
+        margin: 0 auto;
+      }
+
+      .topbar {
+        position: sticky;
+        top: 0;
+        z-index: 50;
+        background: rgba(0, 0, 0, 0.86);
+        backdrop-filter: blur(14px);
+        border-bottom: 1px solid var(--border);
+      }
+
+      .topbar-inner {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        padding: 16px 0;
+      }
+
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+
+      .brand img {
+        width: 44px;
+        height: 44px;
+        object-fit: contain;
+        border-radius: 12px;
+      }
+
+      .brand-title {
+        margin: 0;
+        color: var(--yellow);
+        font-size: 28px;
+        font-weight: 800;
+        line-height: 1;
+      }
+
+      .brand-subtitle {
+        margin: 4px 0 0;
+        font-size: 11px;
+        letter-spacing: 0.35em;
+        text-transform: uppercase;
+        color: rgba(255,255,255,0.65);
+      }
+
+      .desktop-nav {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .nav-btn {
+        border: 0;
+        background: transparent;
+        color: rgba(255,255,255,0.76);
+        padding: 10px 16px;
+        border-radius: 999px;
+        transition: 0.2s ease;
+      }
+
+      .nav-btn:hover,
+      .nav-btn.active {
+        background: var(--yellow);
+        color: #000;
+        font-weight: 700;
+      }
+
+      .instagram-btn,
+      .primary-btn,
+      .secondary-btn,
+      .outline-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        border-radius: 999px;
+        padding: 14px 22px;
+        transition: 0.2s ease;
+      }
+
+      .instagram-btn,
+      .primary-btn {
+        background: var(--yellow);
+        color: #000;
+        font-weight: 700;
+        box-shadow: var(--shadow);
+      }
+
+      .instagram-btn:hover,
+      .primary-btn:hover,
+      .outline-btn:hover,
+      .secondary-btn:hover {
+        transform: translateY(-1px);
+      }
+
+      .secondary-btn,
+      .outline-btn {
+        border: 1px solid var(--border);
+        background: transparent;
+        color: rgba(255,255,255,0.88);
+        font-weight: 600;
+      }
+
+      .mobile-toggle {
+        display: none;
+        width: 44px;
+        height: 44px;
+        border-radius: 16px;
+        border: 1px solid var(--border);
+        background: var(--bg-soft);
+        color: white;
+      }
+
+      .mobile-nav {
+        display: none;
+        padding: 0 0 16px;
+      }
+
+      .mobile-nav.open {
+        display: block;
+      }
+
+      .mobile-nav-inner {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+
+      .section {
+        display: none;
+        padding: 28px 0 36px;
+      }
+
+      .section.active {
+        display: block;
+      }
+
+      .hero {
+        position: relative;
+        overflow: hidden;
+        display: grid;
+        grid-template-columns: 0.96fr 1.04fr;
+        gap: 28px;
+        padding: 28px;
+        border: 1px solid var(--border);
+        border-radius: var(--radius-xl);
+        background: var(--bg-soft);
+      }
+
+      .hero-logo-bg {
+        position: absolute;
+        left: -70px;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 430px;
+        opacity: 0.045;
+        pointer-events: none;
+      }
+
+      .pill {
+        display: inline-flex;
+        padding: 9px 14px;
+        border-radius: 999px;
+        background: rgba(250, 204, 21, 0.1);
+        border: 1px solid rgba(250, 204, 21, 0.2);
+        color: #fde68a;
+        font-size: 14px;
+      }
+
+      .hero h1,
+      .section-title {
+        margin: 22px 0 0;
+        font-size: clamp(34px, 5vw, 64px);
+        line-height: 1.05;
+      }
+
+      .section-title.small {
+        font-size: clamp(30px, 4vw, 52px);
+      }
+
+      .lead {
+        margin: 22px 0 0;
+        max-width: 760px;
+        font-size: 18px;
+        line-height: 1.8;
+        color: var(--muted);
+      }
+
+      .hero-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 14px;
+        margin-top: 28px;
+      }
+
+      .cards-3,
+      .cards-contacts,
+      .cards-services,
+      .cards-testimonials,
+      .cards-photos,
+      .cards-values {
+        display: grid;
+        gap: 18px;
+      }
+
+      .cards-contacts {
+        grid-template-columns: repeat(3, 1fr);
+        margin-top: 28px;
+      }
+
+      .cards-photos {
+        grid-template-columns: repeat(3, 1fr);
+        align-self: center;
+      }
+
+      .cards-photos .photo-card:nth-child(1),
+      .cards-photos .photo-card:nth-child(5) {
+        transform: translateY(22px);
+      }
+
+      .cards-photos .photo-card:nth-child(3) {
+        transform: translateY(42px);
+      }
+
+      .card,
+      .photo-card,
+      .testimonial,
+      .service-card,
+      .value-card,
+      .location-box {
+        border: 1px solid var(--border);
+        background: var(--bg-card);
+        border-radius: var(--radius-lg);
+      }
+
+      .card,
+      .service-card,
+      .testimonial,
+      .value-card {
+        padding: 22px;
+      }
+
+      .icon-box {
+        width: 42px;
+        height: 42px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 16px;
+        background: rgba(250, 204, 21, 0.1);
+        color: var(--yellow);
+        font-size: 18px;
+      }
+
+      .card-label,
+      .eyebrow {
+        margin-top: 14px;
+        font-size: 12px;
+        text-transform: uppercase;
+        letter-spacing: 0.24em;
+        color: rgba(250, 204, 21, 0.9);
+      }
+
+      .card-value,
+      .service-card p,
+      .testimonial p,
+      .value-card p,
+      .location-box p,
+      .section-copy {
+        margin-top: 10px;
+        line-height: 1.8;
+        color: var(--muted);
+      }
+
+      .photo-card {
+        overflow: hidden;
+        min-height: 185px;
+        background: rgba(0,0,0,0.35);
+      }
+
+      .photo-card img {
+        display: block;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+
+      .cards-services {
+        grid-template-columns: repeat(3, 1fr);
+        margin-top: 34px;
+      }
+
+      .service-card h3,
+      .testimonial-name,
+      .location-address {
+        margin: 14px 0 0;
+      }
+
+      .cards-values {
+        grid-template-columns: 1fr;
+      }
+
+      .about-grid {
+        display: grid;
+        grid-template-columns: 1.05fr 0.95fr;
+        gap: 22px;
+      }
+
+      .cards-testimonials {
+        grid-template-columns: repeat(3, 1fr);
+        margin-top: 34px;
+      }
+
+      .stars {
+        color: var(--yellow);
+        letter-spacing: 2px;
+      }
+
+      .contact-wrap {
+        max-width: 1040px;
+        margin: 0 auto;
+        padding: 28px;
+        border: 1px solid var(--border);
+        border-radius: var(--radius-xl);
+        background: var(--bg-soft);
+      }
+
+      .location-box {
+        margin-top: 28px;
+        padding: 24px;
+        background: linear-gradient(135deg, rgba(250, 204, 21, 0.08), rgba(255,255,255,0.02));
+      }
+
+      .location-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        margin-top: 20px;
+      }
+
+      .floating-whatsapp {
+        position: fixed;
+        right: 20px;
+        bottom: 20px;
+        z-index: 60;
+      }
+
+      .mobile-only {
+        display: none;
+      }
+
+      @media (max-width: 980px) {
+        .desktop-nav,
+        .instagram-btn {
+          display: none;
+        }
+
+        .mobile-toggle {
+          display: inline-flex;
+        }
+
+        .hero,
+        .about-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .hero-logo-bg {
+          display: none;
+        }
+
+        .cards-services,
+        .cards-testimonials,
+        .cards-contacts,
+        .cards-photos {
+          grid-template-columns: 1fr 1fr;
+        }
+
+        .cards-photos .photo-card:nth-child(1),
+        .cards-photos .photo-card:nth-child(5),
+        .cards-photos .photo-card:nth-child(3) {
+          transform: none;
+        }
+      }
+
+      @media (max-width: 640px) {
+        .container {
+          width: min(100% - 20px, 1200px);
+        }
+
+        .cards-services,
+        .cards-testimonials,
+        .cards-contacts,
+        .cards-photos {
+          grid-template-columns: 1fr;
+        }
+
+        .hero,
+        .contact-wrap {
+          padding: 20px;
+        }
+
+        .hero-actions,
+        .location-actions {
+          flex-direction: column;
+        }
+
+        .mobile-only {
+          display: inline-flex;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header class="topbar">
+      <div class="container topbar-inner">
+        <button class="brand" onclick="showSection('inicio')" style="background:none;border:0;padding:0;color:inherit;cursor:pointer;">
+          <img src="https://i.imgur.com/HlFuS1n.png" alt="GePetrus Auto Center" />
+          <div>
+            <p class="brand-title">GePetrus</p>
+            <p class="brand-subtitle">Auto Center</p>
+          </div>
+        </button>
+
+        <nav class="desktop-nav">
+          <button class="nav-btn active" data-tab="inicio" onclick="showSection('inicio')">Início</button>
+          <button class="nav-btn" data-tab="servicos" onclick="showSection('servicos')">Serviços</button>
+          <button class="nav-btn" data-tab="sobre" onclick="showSection('sobre')">Sobre</button>
+          <button class="nav-btn" data-tab="avaliacoes" onclick="showSection('avaliacoes')">Avaliações</button>
+          <button class="nav-btn" data-tab="contato" onclick="showSection('contato')">Contato</button>
+        </nav>
+
+        <div style="display:flex;align-items:center;gap:12px;">
+          <a class="instagram-btn" href="https://instagram.com/gepetrusautocenter" target="_blank" rel="noreferrer">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <rect x="3" y="3" width="18" height="18" rx="5" stroke="currentColor" stroke-width="2"></rect>
+              <circle cx="12" cy="12" r="4" stroke="currentColor" stroke-width="2"></circle>
+              <circle cx="17.2" cy="6.8" r="1.2" fill="currentColor"></circle>
+            </svg>
+            Siga no Instagram
+          </a>
+          <button class="mobile-toggle" onclick="toggleMobileMenu()">☰</button>
+        </div>
+      </div>
+
+      <div id="mobileNav" class="mobile-nav">
+        <div class="container mobile-nav-inner">
+          <button class="nav-btn active" data-mobile-tab="inicio" onclick="showSection('inicio')">Início</button>
+          <button class="nav-btn" data-mobile-tab="servicos" onclick="showSection('servicos')">Serviços</button>
+          <button class="nav-btn" data-mobile-tab="sobre" onclick="showSection('sobre')">Sobre</button>
+          <button class="nav-btn" data-mobile-tab="avaliacoes" onclick="showSection('avaliacoes')">Avaliações</button>
+          <button class="nav-btn" data-mobile-tab="contato" onclick="showSection('contato')">Contato</button>
+          <a class="primary-btn" href="https://wa.me/5534991065151">Falar no WhatsApp</a>
+        </div>
+      </div>
+    </header>
+
+    <main class="container">
+      <section id="inicio" class="section active">
+        <div class="hero">
+          <img class="hero-logo-bg" src="https://i.imgur.com/HlFuS1n.png" alt="" aria-hidden="true" />
+
+          <div style="position:relative;z-index:1;">
+            <div class="pill">Cuidando do seu carro com dedicação</div>
+            <h1>Mecânica de confiança, com atendimento claro e serviço bem feito.</h1>
+            <p class="lead">
+              Na GePetrus Auto Center, cada atendimento é feito com seriedade, clareza e dedicação. Nosso compromisso é entregar um serviço bem feito, explicar o que realmente precisa ser feito no veículo e manter uma relação de transparência e honestidade com cada cliente.
+            </p>
+
+            <div class="hero-actions">
+              <a class="primary-btn" href="https://wa.me/5534991065151">Falar no WhatsApp</a>
+              <button class="secondary-btn" onclick="showSection('servicos')">Ver serviços →</button>
+            </div>
+
+            <div class="cards-contacts">
+              <div class="card">
+                <div class="icon-box">☎</div>
+                <div class="card-label">WhatsApp</div>
+                <div class="card-value">+55 34 99106-5151</div>
+              </div>
+              <div class="card">
+                <div class="icon-box">📍</div>
+                <div class="card-label">Endereço</div>
+                <div class="card-value">Av. Belarmino Cotta Pacheco, 1955, Uberlândia - MG</div>
+              </div>
+              <div class="card">
+                <div class="icon-box">🕒</div>
+                <div class="card-label">Horário</div>
+                <div class="card-value">Segunda a sexta, 8h às 18h</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="cards-photos" style="position:relative;z-index:1;">
+            <div class="photo-card"><img src="https://i.imgur.com/m9qbL9Y.jpg" alt="Foto da GePetrus Auto Center 1" /></div>
+            <div class="photo-card"><img src="https://i.imgur.com/JsFdsOa.jpg" alt="Foto da GePetrus Auto Center 2" /></div>
+            <div class="photo-card"><img src="https://i.imgur.com/wLVADZ8.jpg" alt="Foto da GePetrus Auto Center 3" /></div>
+            <div class="photo-card"><img src="https://i.imgur.com/zwArJa9.jpg" alt="Foto da GePetrus Auto Center 4" /></div>
+            <div class="photo-card"><img src="https://i.imgur.com/gIZhRkC.jpg" alt="Foto da GePetrus Auto Center 5" /></div>
+            <div class="photo-card"><img src="https://i.imgur.com/uHYqwww.jpg" alt="Foto da GePetrus Auto Center 6" /></div>
+          </div>
+        </div>
+      </section>
+
+      <section id="servicos" class="section">
+        <div>
+          <div class="eyebrow">Serviços</div>
+          <h2 class="section-title small">Tudo o que seu carro precisa.</h2>
+          <p class="lead">Serviços apresentados com clareza, organização e foco no que realmente importa para o cliente.</p>
+        </div>
+
+        <div class="cards-services">
+          <div class="service-card">
+            <div class="icon-box">🛡</div>
+            <h3>Revisão Completa</h3>
+            <p>Verificação geral para manter seu carro seguro, revisado e pronto para rodar.</p>
+          </div>
+          <div class="service-card">
+            <div class="icon-box">🔧</div>
+            <h3>Freios</h3>
+            <p>Inspeção e manutenção com foco total em segurança e confiança.</p>
+          </div>
+          <div class="service-card">
+            <div class="icon-box">⚙</div>
+            <h3>Suspensão</h3>
+            <p>Mais conforto, estabilidade e controle para o dia a dia.</p>
+          </div>
+          <div class="service-card">
+            <div class="icon-box">🛠</div>
+            <h3>Motor</h3>
+            <p>Diagnóstico e solução eficiente para manter o desempenho do seu carro.</p>
+          </div>
+          <div class="service-card">
+            <div class="icon-box">🚗</div>
+            <h3>Troca de Óleo</h3>
+            <p>Cuidado essencial para preservar a vida útil e o bom funcionamento do motor.</p>
+          </div>
+          <div class="service-card">
+            <div class="icon-box">📈</div>
+            <h3>Diagnóstico Automotivo</h3>
+            <p>Identificação rápida do problema para encontrar a melhor solução.</p>
+          </div>
+        </div>
+      </section>
+
+      <section id="sobre" class="section">
+        <div class="about-grid">
+          <div class="card" style="padding:28px;">
+            <div class="eyebrow">Sobre</div>
+            <h2 class="section-title small">Mais do que prestar serviço, queremos gerar confiança.</h2>
+            <p class="section-copy">
+              A GePetrus Auto Center nasceu com a proposta de oferecer um atendimento profissional, mas sem perder a proximidade com o cliente. Nosso objetivo é cuidar de cada veículo com responsabilidade, atenção aos detalhes e compromisso com um serviço bem executado.
+            </p>
+            <p class="section-copy">
+              Queremos que cada pessoa que chega até a oficina entenda o que está sendo feito no carro, por que o serviço é necessário e qual é a melhor solução para o problema apresentado. Transparência, honestidade e respeito fazem parte da forma como trabalhamos todos os dias.
+            </p>
+            <p class="section-copy">
+              Nosso propósito é construir uma relação de confiança duradoura, entregando qualidade, clareza no atendimento e segurança para que o cliente saia satisfeito e tranquilo.
+            </p>
+          </div>
+
+          <div class="cards-values">
+            <div class="value-card"><strong>✔ Atendimento com transparência</strong></div>
+            <div class="value-card"><strong>✔ Serviço de qualidade</strong></div>
+            <div class="value-card"><strong>✔ Cuidado em cada detalhe</strong></div>
+            <div class="value-card"><strong>✔ Compromisso com o cliente</strong></div>
+          </div>
+        </div>
+      </section>
+
+      <section id="avaliacoes" class="section">
+        <div>
+          <div class="eyebrow">Avaliações</div>
+          <h2 class="section-title small">O que nossos clientes dizem sobre a GePetrus.</h2>
+          <p class="lead">Avaliações reais de clientes que confiaram no nosso trabalho, no nosso atendimento e na forma como conduzimos cada serviço com transparência.</p>
+        </div>
+
+        <div class="cards-testimonials">
+          <div class="testimonial">
+            <div class="stars">★★★★★</div>
+            <p>“Atendimento excelente do início ao fim! A equipe é muito profissional, explica tudo com clareza e realiza o serviço com capricho e agilidade. Meu carro ficou perfeito e dentro do prazo combinado. O GePetrus Auto Center com certeza ganhou minha confiança. Recomendo para quem procura um mecânico de confiança em Uberlândia!”</p>
+            <div class="testimonial-name">Lucas De Melo</div>
+          </div>
+          <div class="testimonial">
+            <div class="stars">★★★★★</div>
+            <p>“Uma Auto Center conceito necessita, antes de tudo, de profissionais qualificados, equipamentos especializados, responsabilidade e transparência no serviço prestado. Isso tudo a GePetrus tem. Voltarei mais vezes, eu e toda a minha família e amigos. Continuem assim!”</p>
+            <div class="testimonial-name">Warley Oliveira</div>
+          </div>
+          <div class="testimonial">
+            <div class="stars">★★★★★</div>
+            <p>“Atendimento excelente e equipe extremamente profissional! A GePetrus resolveu o problema do meu carro com rapidez e transparência, explicando cada etapa do serviço. Ótima relação custo-benefício e honestidade no diagnóstico. Recomendo de olhos fechados e com certeza voltarei sempre que precisar.”</p>
+            <div class="testimonial-name">Rafael Oliveira Araujo</div>
+          </div>
+          <div class="testimonial">
+            <div class="stars">★★★★★</div>
+            <p>“Pessoal bom de serviço, nunca deixam na mão.”</p>
+            <div class="testimonial-name">Marcos Filipe Furtado</div>
+          </div>
+          <div class="testimonial">
+            <div class="stars">★★★★★</div>
+            <p>“Muito boa, sem dúvidas a melhor! Atendimento de excelência e ambiente familiar. Super recomendo!”</p>
+            <div class="testimonial-name">Morganna Oliveira</div>
+          </div>
+        </div>
+      </section>
+
+      <section id="contato" class="section">
+        <div class="contact-wrap">
+          <div>
+            <div class="eyebrow">Contato</div>
+            <h2 class="section-title small">Fale direto com a GePetrus.</h2>
+            <p class="lead">Orçamento, revisão, manutenção ou dúvidas. Entre em contato e fale com a oficina de forma rápida e direta.</p>
+          </div>
+
+          <div class="cards-contacts" style="margin-top:30px;">
+            <div class="card">
+              <div class="icon-box">☎</div>
+              <div class="card-label">WhatsApp</div>
+              <div class="card-value">+55 34 99106-5151</div>
+            </div>
+            <div class="card">
+              <div class="icon-box">📍</div>
+              <div class="card-label">Endereço</div>
+              <div class="card-value">Av. Belarmino Cotta Pacheco, 1955, Uberlândia - MG</div>
+            </div>
+            <div class="card">
+              <div class="icon-box">🕒</div>
+              <div class="card-label">Horário</div>
+              <div class="card-value">Segunda a sexta, 8h às 18h</div>
+            </div>
+          </div>
+
+          <div class="location-box">
+            <div class="eyebrow">Localização</div>
+            <div class="location-address">Av. Belarmino Cotta Pacheco, 1955, Uberlândia - MG</div>
+            <p>Abra a rota no aplicativo que preferir ou fale direto com a gente no WhatsApp.</p>
+
+            <div class="location-actions">
+              <a class="primary-btn" href="https://share.google/gJz51NKfWfrTNDWcS" target="_blank" rel="noreferrer">Abrir no Google Maps</a>
+              <a class="outline-btn" href="https://www.waze.com/ul?q=Av%20Belarmino%20Cotta%20Pacheco%201955%20Uberlandia%20MG&navigate=yes" target="_blank" rel="noreferrer">Abrir no Waze</a>
+              <a class="outline-btn" href="https://wa.me/5534991065151">Chamar no WhatsApp</a>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <a class="primary-btn floating-whatsapp" href="https://wa.me/5534991065151">WhatsApp</a>
+
+    <script>
+      function showSection(id) {
+        document.querySelectorAll('.section').forEach((section) => {
+          section.classList.remove('active');
+        });
+        document.getElementById(id).classList.add('active');
+
+        document.querySelectorAll('[data-tab]').forEach((btn) => {
+          btn.classList.toggle('active', btn.getAttribute('data-tab') === id);
+        });
+
+        document.querySelectorAll('[data-mobile-tab]').forEach((btn) => {
+          btn.classList.toggle('active', btn.getAttribute('data-mobile-tab') === id);
+        });
+
+        document.getElementById('mobileNav').classList.remove('open');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+
+      function toggleMobileMenu() {
+        document.getElementById('mobileNav').classList.toggle('open');
+      }
+    </script>
+  </body>
+</html>

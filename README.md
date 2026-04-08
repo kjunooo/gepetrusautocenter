@@ -1,2 +1,0 @@
-# gepetrusautocenter
-auto center
